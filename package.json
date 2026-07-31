@@ -1,0 +1,41 @@
+{
+  "name": "homevault",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "node scripts/gen-icons.mjs && vite build && node scripts/verify-dist.mjs",
+    "start": "node server.mjs",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "icons": "node scripts/gen-icons.mjs",
+    "verify": "node scripts/verify-dist.mjs"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^5.2.0",
+    "framer-motion": "^12.43.0",
+    "jsqr": "^1.4.0",
+    "qrcode.react": "^4.2.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "vite": "^7.3.6",
+    "vite-plugin-singlefile": "^2.3.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.15",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3"
+  },
+  "version": "1.0.0",
+  "description": "HomeVault — premium offline-first home inventory PWA. React 19 + Vite 7 + Tailwind v4 + Framer Motion. All data in localStorage.",
+  "type": "module",
+  "keywords": [
+    "pwa",
+    "home-inventory",
+    "vite",
+    "react"
+  ]
+}

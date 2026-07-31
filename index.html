@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover"
+    />
+    <title>HomeVault — Premium Home Inventory</title>
+    <meta
+      name="description"
+      content="HomeVault is a premium offline-first home inventory app: track belongings, warranties, maintenance and value in Nigerian Naira."
+    />
+    <meta name="theme-color" content="#1E3A5F" />
+    <meta name="color-scheme" content="light dark" />
+
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <meta name="application-name" content="HomeVault" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="HomeVault" />
+
+    <meta property="og:title" content="HomeVault — Premium Home Inventory" />
+    <meta property="og:description" content="Track every item in your home: value, warranties and maintenance." />
+    <meta property="og:type" content="website" />
+
+    <!--
+      Capture the install prompt before the app bundle evaluates.
+      Chrome fires `beforeinstallprompt` very early — a React effect registered
+      after hydration would miss it and the Install button would never appear.
+    -->
+    <script>
+      (function () {
+        var bridge = {
+          deferred: null,
+          installed:
+            window.matchMedia('(display-mode: standalone)').matches ||
+            window.matchMedia('(display-mode: minimal-ui)').matches ||
+            window.navigator.standalone === true,
+        };
+        window.__hvPwa = bridge;
+        window.addEventListener('beforeinstallprompt', function (event) {
+          event.preventDefault();
+          bridge.deferred = event;
+          window.dispatchEvent(new CustomEvent('hv:installable'));
+        });
+        window.addEventListener('appinstalled', function () {
+          bridge.deferred = null;
+          bridge.installed = true;
+          window.dispatchEvent(new CustomEvent('hv:installed'));
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        try {
+          var raw = localStorage.getItem('homevault.data.v1');
+          var pref = raw ? (JSON.parse(raw).settings || {}).theme : 'system';
+          var dark =
+            pref === 'dark' ||
+            ((pref === 'system' || !pref) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', !!dark);
+          document.documentElement.style.background = dark ? '#08131f' : '#f4f7fb';
+          document.documentElement.dataset.boot = dark ? 'dark' : 'light';
+        } catch (e) {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(160deg, #14304f, #0b1b2e 60%, #0f2f36);
+        z-index: 90;
+      }
+      #boot .mark {
+        width: 76px;
+        height: 76px;
+        border-radius: 22px;
+        background: linear-gradient(150deg, #1e3a5f, #0f766e);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+        display: grid;
+        place-items: center;
+        animation: bpulse 1.4s ease-in-out infinite;
+      }
+      @keyframes bpulse {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          transform: translateY(-6px) scale(1.04);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot">
+      <div class="mark">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#fff"
+          stroke-width="1.9"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 10.5 12 3l9 7.5" />
+          <path d="M5 9.8V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.8" />
+          <path d="M9.5 21v-6h5v6" stroke="#38BDF8" />
+        </svg>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
